@@ -58,5 +58,14 @@ class PolicyRef {
             oldItem.next.previous = newItem;
         }
     }
+
+    static void remove(PolicyRef item) {
+        if (item.previous != null) {
+            item.previous.next = item.next;
+        }
+        if (item.next != null) {
+            item.next.previous = item.previous;
+        }
+    }
 }
 
