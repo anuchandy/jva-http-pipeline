@@ -1,5 +1,4 @@
 # jva-http-pipeline [V3 proposal]
-
              
 ## The PipelineCallContext
 
@@ -29,8 +28,6 @@ public interface RequestPolicy {
 ```
 
 ##  HttpPipeline and policies
-
-### Global policies
 
 Pipeline is created with policies. Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
 
@@ -67,6 +64,6 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpR
 
 ```
 
-### Current V3 pipeline
+### V3 pipeline 
 
-![alt text](https://github.com/anuchandy/jva-http-pipeline/blob/master/doc/V2_Request_Policy.jpg)
+![alt text](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/req_policy_cxt.jpg)
