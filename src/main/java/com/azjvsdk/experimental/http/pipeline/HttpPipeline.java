@@ -11,7 +11,7 @@ import java.util.Objects;
  * The http pipeline.
  */
 public final class HttpPipeline {
-    private final PolicyEntry[] requestPolicyEntries;
+    private final RequestPolicy[] requestPolicies;
     private final HttpClient httpClient;
 
     /**
@@ -25,35 +25,22 @@ public final class HttpPipeline {
     public HttpPipeline(RequestPolicy[] requestPolicies, HttpClient httpClient) {
         Objects.requireNonNull(requestPolicies);
         Objects.requireNonNull(httpClient);
-        this.requestPolicyEntries = new PolicyEntry[requestPolicies.length];
-        for (int i = 0; i < requestPolicies.length; i++) {
-            Objects.requireNonNull(requestPolicies[i]);
-            this.requestPolicyEntries[i] = new PolicyEntry(requestPolicies[i].getClass().getName(), requestPolicies[i]);
-        }
+        this.requestPolicies = requestPolicies;
         this.httpClient = httpClient;
     }
 
     /**
-     * Creates a HttpPipeline holding array of global policies that gets applied
-     * to all request initiated through {@link HttpPipeline#sendRequest(PipelineCallContext)}
-     * and it's response.
-     *
-     * @param requestPolicyEntries request policy entries, each entry contains policy name and
-     *                             request policy. The policies get applied in the order of entries array.
-     * @param httpClient the http client to write request to wire and receive response from wire.
+     * @return global request policies in the pipeline.
      */
-    public HttpPipeline(PolicyEntry[] requestPolicyEntries, HttpClient httpClient) {
-        Objects.requireNonNull(requestPolicyEntries);
-        Objects.requireNonNull(httpClient);
-        this.requestPolicyEntries = requestPolicyEntries;
-        this.httpClient = httpClient;
+    public RequestPolicy[] requestPolicies() {
+        return this.requestPolicies;
     }
 
     /**
-     * @return global request policy entries in the pipeline.
+     * @return the http client associated with the pipeline.
      */
-    public PolicyEntry[] requestPolicyEntries() {
-        return this.requestPolicyEntries;
+    public HttpClient httpClient() {
+        return this.httpClient;
     }
 
     /**
@@ -63,7 +50,7 @@ public final class HttpPipeline {
      * @return the request context
      */
     public PipelineCallContext newContext(HttpRequest httpRequest) {
-        return new PipelineCallContext(this.httpClient, httpRequest, this.requestPolicyEntries);
+        return new PipelineCallContext(httpRequest, this);
     }
 
     /**
