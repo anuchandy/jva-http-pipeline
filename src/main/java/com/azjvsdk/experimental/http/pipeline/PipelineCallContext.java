@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Type representing context local to a http request and response.
+ * Type representing context local to a single http request and it's response.
  */
 public final class PipelineCallContext {
     private final HttpPipeline httpPipeline;
@@ -17,6 +17,7 @@ public final class PipelineCallContext {
     private int currentPolicyIndex;
     //
     private Map<String, Object> datas = new HashMap<>();
+    private ContextData data;
 
     //<editor-fold defaultstate="collapsed" desc="Package internal methods">
     /**
@@ -30,12 +31,29 @@ public final class PipelineCallContext {
      * @throws IllegalArgumentException if there are multiple policies with same name
      */
     PipelineCallContext(HttpRequest httpRequest, HttpPipeline httpPipeline) {
+       this(httpRequest, httpPipeline, ContextData.NONE);
+    }
+
+    /**
+     * Package private ctr.
+     *
+     * Creates PipelineCallContext.
+     *
+     * @param httpRequest the request for which context needs to be created
+     * @param httpPipeline the http pipeline
+     * @param data the data to associate with this context
+     *
+     * @throws IllegalArgumentException if there are multiple policies with same name
+     */
+    PipelineCallContext(HttpRequest httpRequest, HttpPipeline httpPipeline, ContextData data) {
         Objects.requireNonNull(httpRequest);
         Objects.requireNonNull(httpPipeline);
+        Objects.requireNonNull(data);
         //
         this.httpRequest = httpRequest;
         this.httpPipeline = httpPipeline;
         this.currentPolicyIndex = this.httpPipeline.requestPolicies().length == 0 ? -1 : 0;
+        this.data = data;
     }
 
     /**
@@ -82,7 +100,7 @@ public final class PipelineCallContext {
      * @param value the value
      */
     public void setData(String key, Object value) {
-        this.datas.put(key, value);
+        this.data = this.data.addData(key, value);
     }
 
     /**
@@ -92,17 +110,7 @@ public final class PipelineCallContext {
      * @return the value if exists else null
      */
     public Object getData(String key) {
-        return this.datas.get(key);
-    }
-
-    /**
-     * Checks data with given key exists in the context.
-     *
-     * @param key the key
-     * @return true if key exists, false otherwise.
-     */
-    public boolean dataExists(String key) {
-        return datas.containsKey(key);
+        return this.data.getData(key);
     }
 
     /**
