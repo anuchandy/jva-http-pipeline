@@ -4,8 +4,6 @@ import com.azjvsdk.experimental.http.HttpRequest;
 import com.azjvsdk.experimental.http.HttpResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,7 +14,6 @@ public final class PipelineCallContext {
     private final HttpRequest httpRequest;
     private int currentPolicyIndex;
     //
-    private Map<String, Object> datas = new HashMap<>();
     private ContextData data;
 
     //<editor-fold defaultstate="collapsed" desc="Package internal methods">

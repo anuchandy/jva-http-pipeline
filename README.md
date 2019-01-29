@@ -1,6 +1,13 @@
 # jva-http-pipeline [V3 proposal]
 
-## RequestPolicy interface
+## Types in pipeline
+
+1. RequestPolicy
+2. HttpPipeline
+3. PipelineCallContext
+4. NextPolicy
+
+### RequestPolicy
 
 ```java
 @FunctionalInterface
@@ -16,15 +23,17 @@ public interface RequestPolicy {
 }
 ```
 
-##  HttpPipeline and policies
+### HttpPipeline
 
 Pipeline is created with policy instances.
 
 ```java
 RequestPolicy[] policies = getRequestPolicies();
+HttpClient httpClient = createHttpClient();
+//
 HttpPipeline pipeline = new HttpPipeline(policies, httpClient);
 ```
-## The PipelineCallContext
+### PipelineCallContext
 
 Each HttpRequest instance must have a unique context associated with it.
 
@@ -34,8 +43,13 @@ HttpRequest httpRequest0 = createHttpRequest0();
 // Create a context for the http request
 PipelineCallContext cxt0 = pipeline.newContext(httpRequest0);
 ```
+The context is used by policies in the pipeline to:
+ 1. Access the request
+ 2. Store and retrieve data
 
-##  HttpPipeline, policies, context & requests
+[HttpRequest composes Cxt vs Cxt composes HttpRequest](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/RequestInContext_vs_ContextInRequest.md)
+
+###  Example: Request policies, HttpPipeline, PipelineCallContext & HttpRequest
 
 Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
 
@@ -80,7 +94,10 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpR
         <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/V3_Pipeline_Policy_Object_Allocation.md">Pipeline & policies object allocation</a></li></td>
       </tr>
     <tr>
-      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md">Context flow through pipeline & callstack</a></li></td>
+      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md">Context flow through pipeline & call-stack</a></li></td>
+    </tr>
+    <tr>
+      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Types_GC.md">Garbage collection of pipeline and associated types</a></li></td>
     </tr>
 </table>
 

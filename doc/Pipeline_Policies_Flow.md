@@ -5,3 +5,6 @@
 ### Context flow CallStack
 
 ![alt text](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/v3_proposal_req_policy_ctr_flow.jpg)
+
+
+[Next: Garbage collection of pipeline and associated types](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Types_GC.md)

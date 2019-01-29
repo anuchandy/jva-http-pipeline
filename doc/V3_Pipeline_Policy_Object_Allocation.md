@@ -17,4 +17,4 @@ public interface RequestPolicy {
 }
 ```
 
-[Next: dContext flow through pipeline & callstack](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md)
+[Next: Context flow through pipeline & call-stack](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md)
