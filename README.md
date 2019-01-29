@@ -49,7 +49,7 @@ policies[0] = (context, next) -> {
     // logic to process request, context.request()
     // use context.setData(string:key, Object:value), context.getData(string:key) to access state
     Mono<HttpResponse> monoResponse = next.process();
-    return mono.map(response -> {
+    return monoResponse.map(response -> {
         // logic to process HttpResponse
         return response;
     });
@@ -76,8 +76,11 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpR
   <tr>
     <th>Reference</th>
   </tr>
-  <tr>
-    <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/V3_Pipeline_Policy_Object_Allocation.md">Pipeline & policies object allocation</a></li></td>
-  </tr>
+      <tr>
+        <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/V3_Pipeline_Policy_Object_Allocation.md">Pipeline & policies object allocation</a></li></td>
+      </tr>
+    <tr>
+      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md">Context flow through pipeline & callstack</a></li></td>
+    </tr>
 </table>
 
