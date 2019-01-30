@@ -99,5 +99,8 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpR
     <tr>
       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Types_GC.md">Garbage collection of pipeline and associated types</a></li></td>
     </tr>
+    <tr>
+       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Request_Response_Content.md">Request and Response content</a></li></td>
+    </tr>
 </table>
 
