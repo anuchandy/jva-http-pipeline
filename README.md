@@ -33,6 +33,8 @@ HttpClient httpClient = createHttpClient();
 //
 HttpPipeline pipeline = new HttpPipeline(policies, httpClient);
 ```
+Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
+
 ### PipelineCallContext
 
 Each HttpRequest instance must have a unique context associated with it.
@@ -51,13 +53,13 @@ The context is used by policies in the pipeline to:
 
 ###  Example: Request policies, HttpPipeline, PipelineCallContext & HttpRequest
 
-Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
-
 ```java
 // Create http client
 HttpClient httpClient = createHttpClient();
+
+// Create RequestPolicy array
 RequestPolicy[] policies = new RequestPolicy[2];
-//
+
 // First policy
 policies[0] = (context, next) -> {
     // logic to process request, context.request()
@@ -68,17 +70,23 @@ policies[0] = (context, next) -> {
         return response;
     });
 };
+
 // Second policy
 policies[1] = (context, next) -> {
     // ...
     return next.process();
 };
+
 // Create pipeline
 HttpPipeline pipeline = new HttpPipeline(policies, httpClient);
+
+
 // Create first http request
 HttpRequest httpRequest0 = createHttpRequest0();
 // Create a context for the first http request & send it
 Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpRequest0));
+
+
 // Create second http request
 HttpRequest httpRequest1 = createHttpRequest1();
 // Create a context for the second http request & send it
