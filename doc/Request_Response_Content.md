@@ -4,6 +4,12 @@
 
 The type we pick for request and response 'content' is 	extremely important as plays THE major role in GC pressure.
 
+In this section we explore various available buffer types, pros and cons of each and finally the discuss the buffer type for request-response content. 
+
+* java.nio.buffer.ByteBuffer
+* io.netty.buffer.ByteBuf
+* reactor.netty.ByteBufFlux
+
 ### java.nio.buffer.ByteBuffer
 
 JDK built-in type that simplifies operation on the byte content.
@@ -69,12 +75,13 @@ Good thing: Netty has a simple leak reporting facility that should help to ident
 
 #### Response content
 
-In reactor-netty, the response content from service is represented using ByteBufFlux type. As user consumes each chunk, reactor-netty takes care of releasing ByteBuf to Netty's pool.
-[ There is no additional allocation of ByteBuf other than the one netty allocate from it's pool ]
+In reactor-netty, the response content from service is represented using `reactor.netty.ByteBufFlux` type. As user consumes each chunk (`io.netty.buffer.ByteBuf`) in this stream, reactor-netty takes care of releasing consumed ByteBuf to Netty's pool.
+
+There is no additional allocation of ByteBuf other than the one netty allocate from it's pool.
 
 Today the [content()](https://github.com/Azure/autorest-clientruntime-for-java/blob/996c7b706875293858e91a1f1a14330334bc88b9/client-runtime/src/main/java/com/microsoft/rest/v3/http/NettyClient.java#L120) getter property in our `Runtime Response` type returns `Flux<java.nio.buffer.ByteBuffer>`.
 
-1. We convert `Flux<io.netty.buffer.ByteBuf>` to `Flux<java.nio.buffer.ByteBuffer>`, which requires copying. This is less efficient. 
+1. We convert `Flux<io.netty.buffer.ByteBuf>` from reactor-netty to `Flux<java.nio.buffer.ByteBuffer>`, which requires copying. This is less efficient. 
 2. `io.netty.buffer.ByteBuf` is backed by pooled `java.nio.buffer.ByteBuffer`, it is not recommended to provide direct access to this reference-counted backing array. [Netty doc discourages it].
 
 
@@ -82,16 +89,16 @@ TODO: We may end up having `content()` returns `ByteBufFlux`/`Flux<io.netty.buff
  
 #### Request content
 
-In the core, netty requires the content to write to the wire is of `io.netty.buffer.ByteBuf`.
+In the core, netty requires the type of content to write to the wire is of `io.netty.buffer.ByteBuf`.
 
 Reactor-netty expose `send(..)` APIs that takes `Flux<io.netty.buffer.ByteBuf>` or `ByteBufFlux`.
 
 Today the `content()` property in our `runtime Request` type is of type `Fluex<java.nio.buffer.ByteBuffer>`.
 
-1. We [wrap](https://github.com/Azure/autorest-clientruntime-for-java/blob/996c7b706875293858e91a1f1a14330334bc88b9/client-runtime/src/main/java/com/microsoft/rest/v3/http/NettyClient.java#L86) `Fluex<java.nio.buffer.ByteBuffer>` in un-pooled `Flux<io.netty.buffer.ByteBuf>`.
+1. We [wrap](https://github.com/Azure/autorest-clientruntime-for-java/blob/996c7b706875293858e91a1f1a14330334bc88b9/client-runtime/src/main/java/com/microsoft/rest/v3/http/NettyClient.java#L86) `Fluex<java.nio.buffer.ByteBuffer>` in un-pooled `Flux<io.netty.buffer.ByteBuf>` and give it to reactor-netty.
 
 TODO: We may want give more control to user where he can prepare `Flux<io.netty.buffer.ByteBuf>` using either Netty's pooled or un-pooled allocator.
-User don't have to worry about releasing of these ByteBuf to pool in this case. 
+In this case user don't have to worry about releasing of these ByteBuf to pool. 
 Based on Netty reference-count guideline, its the responsibility of the receiving-component to release ByteBuf.
 Ref: http://netty.io/wiki/reference-counted-objects.html
 
