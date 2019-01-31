@@ -29,10 +29,11 @@ Two types of ByteBuffer:
 
 ### io.netty.buffer.ByteBuf
 
-*The runtime is built on the top of reactor-netty. Reactor-netty enables reactive programming on Netty.*
 
 `io.netty.buffer.ByteBuf`: The Netty’s type that wraps JDK ```java.nio.buffer.ByteBuffer``` & simplifies operation on buffer.
 
+<br/>
+<br/>
 Starting from 4.x - Netty supports pooling (ref count based) of ```io.netty.buffer.ByteBuf``` [Direct Buffer Pool & Heap Buffer Pool]. 
 There are 4 concrete implementation of ```io.netty.buffer.ByteBuf```.
 
@@ -44,6 +45,8 @@ There are 4 concrete implementation of ```io.netty.buffer.ByteBuf```.
 |io.netty.buffer.UnpooledHeapByteBuf  | heap_memory | un-pooled
 
 
+<br/>
+<br/>
 #### io.netty.buffer.ByteBuf Pooling performance
 
 Twitter did [perf test](https://blog.twitter.com/engineering/en_us/a/2013/netty-4-at-twitter-reduced-gc-overhead.html) on Netty’s pooling.

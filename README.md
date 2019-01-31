@@ -116,6 +116,9 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt1);
       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Types_GC.md">Garbage collection of pipeline and associated types</a></li></td>
     </tr>
     <tr>
+      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/ContextData.md">Data in PipelineCallContext</a></li></td>
+    </tr>
+    <tr>
       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Runtime_Transport_Layers.md">Autorest Java runtime and modules for transport</a></li></td>
     </tr>
     <tr>
