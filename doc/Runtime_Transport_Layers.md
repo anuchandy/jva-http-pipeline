@@ -1,4 +1,4 @@
-### Autorest Java runtime and transport layers
+### Autorest Java runtime and modules for transport
 
 ![alt text](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Runtime_Transport_Layers.png)
 

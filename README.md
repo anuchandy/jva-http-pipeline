@@ -35,6 +35,8 @@ HttpPipeline pipeline = new HttpPipeline(RequestPolicy[]: policies, HttpClient: 
 ```
 Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
 
+[Pipeline default policies](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/DefaultPolicies.md)
+
 ### PipelineCallContext
 
 Each HttpRequest instance must have a unique context associated with it.
@@ -104,6 +106,9 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt1);
       <tr>
         <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/V3_Pipeline_Policy_Object_Allocation.md">Pipeline & policies object allocation</a></li></td>
       </tr>
+      <tr>
+        <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/NextPolicy.md">NextPolicy Type</a></li></td>
+      </tr>
     <tr>
       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Policies_Flow.md">Context flow through pipeline & call-stack</a></li></td>
     </tr>
@@ -111,7 +116,7 @@ Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt1);
       <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Pipeline_Types_GC.md">Garbage collection of pipeline and associated types</a></li></td>
     </tr>
     <tr>
-      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Runtime_Transport_Layers.md">Autorest runtime and transport layers</a></li></td>
+      <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Runtime_Transport_Layers.md">Autorest Java runtime and modules for transport</a></li></td>
     </tr>
     <tr>
        <td><li><a href="https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/Request_Response_Content.md">Request and Response content</a></li></td>
