@@ -38,12 +38,12 @@ Two types of ByteBuffer:
 Starting from 4.x - Netty supports pooling (ref count based) of ```io.netty.buffer.ByteBuf```. 
 There are 4 concrete implementation of  ```io.netty.buffer.ByteBuf```.
 
-| Impl | Details |
-|------|--------------- |
-|io.netty.buffer.PooledDirectByteBuf | native_memory
-|io.netty.buffer.PooledHeapByteBuf  | heap_memory
-|io.netty.buffer.io.netty.buffer.UnpooledDirectByteBuf  | native_memory
-|io.netty.buffer.UnpooledHeapByteBuf  | heap_memory
+| io.netty.buffer.ByteBuf Impl | Allocated From | pooled/un-pooled |
+|------|--------------- |--------------- |
+|io.netty.buffer.PooledDirectByteBuf | native_memory | pooled
+|io.netty.buffer.PooledHeapByteBuf  | heap_memory | pooled
+|io.netty.buffer.io.netty.buffer.UnpooledDirectByteBuf  | native_memory | un-pooled
+|io.netty.buffer.UnpooledHeapByteBuf  | heap_memory | un-pooled
 
 
 #### io.netty.buffer.ByteBuf Pooling performance
