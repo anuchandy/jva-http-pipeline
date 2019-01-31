@@ -33,8 +33,8 @@ Two types of ByteBuffer:
 
 `io.netty.buffer.ByteBuf`: The Netty’s type that wraps JDK ```java.nio.buffer.ByteBuffer``` & simplifies operation on buffer.
 
-Starting from 4.x - Netty supports pooling (ref count based) of ```io.netty.buffer.ByteBuf```. 
-There are 4 concrete implementation of  ```io.netty.buffer.ByteBuf```.
+Starting from 4.x - Netty supports pooling (ref count based) of ```io.netty.buffer.ByteBuf``` [Direct Buffer Pool & Heap Buffer Pool]. 
+There are 4 concrete implementation of ```io.netty.buffer.ByteBuf```.
 
 | io.netty.buffer.ByteBuf Impl | Allocated From | pooled/un-pooled |
 |------|--------------- |--------------- |
