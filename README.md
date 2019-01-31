@@ -31,7 +31,7 @@ Pipeline is created with policy instances.
 RequestPolicy[] policies = getRequestPolicies();
 HttpClient httpClient = createHttpClient();
 //
-HttpPipeline pipeline = new HttpPipeline(policies, httpClient);
+HttpPipeline pipeline = new HttpPipeline(RequestPolicy[]: policies, HttpClient: httpClient);
 ```
 Same pipeline can be used for multiple HttpRequests, means the same policies are applied on those HttpRequests and corresponding HttpResponses.
 
@@ -41,9 +41,9 @@ Each HttpRequest instance must have a unique context associated with it.
 
 ```java
 // Create http request
-HttpRequest httpRequest0 = createHttpRequest0();
+HttpRequest httpRequest = createHttpRequest();
 // Create a context for the http request
-PipelineCallContext cxt0 = pipeline.newContext(httpRequest0);
+PipelineCallContext cxt = pipeline.newContext(HttpRequest: httpRequest);
 ```
 The context is used by policies in the pipeline to:
  1. Access the request
@@ -83,14 +83,17 @@ HttpPipeline pipeline = new HttpPipeline(policies, httpClient);
 
 // Create first http request
 HttpRequest httpRequest0 = createHttpRequest0();
-// Create a context for the first http request & send it
-Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpRequest0));
+// Send the request through pipeline - Internally PipelineCallContext will be created for the request 
+Mono<HttpResponse> responseMono = pipeline.sendRequest(httpRequest0);
 
 
 // Create second http request
 HttpRequest httpRequest1 = createHttpRequest1();
-// Create a context for the second http request & send it
-Mono<HttpResponse> responseMono = pipeline.sendRequest(pipeline.newContext(httpRequest1));
+//
+PipelineCallContext cxt1 = pipeline.newContext(httpRequest1);
+cxt1.setData("azure", "awesome");
+// send the context through pipeline
+Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt1);
 
 ```
 
