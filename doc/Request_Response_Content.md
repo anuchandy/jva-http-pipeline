@@ -6,9 +6,7 @@ The type we pick for request and response 'content' is 	extremely important as p
 
 In this section we explore various available buffer types, pros and cons of each and finally the discuss the buffer type for request-response content. 
 
-* java.nio.buffer.ByteBuffer
-* io.netty.buffer.ByteBuf
-* reactor.netty.ByteBufFlux
+![alt text](https://github.com/anuchandy/jva-http-pipeline/blob/immutable-pipeline/doc/BufferTypes_vs_TransportLayers.png)
 
 ### java.nio.buffer.ByteBuffer
 
@@ -73,11 +71,13 @@ Good thing: Netty has a simple leak reporting facility that should help to ident
 
 ```reactor.netty.ByteBufFlux```: Type defined by reactor-netty representing a stream of `io.netty.buffer.ByteBuf` (`Flux<io.netty.buffer.ByteBuf>`).
 
-#### Response content
+#### Reactor-netty Response::content
 
 In reactor-netty, the response content from service is represented using `reactor.netty.ByteBufFlux` type. As user consumes each chunk (`io.netty.buffer.ByteBuf`) in this stream, reactor-netty takes care of releasing consumed ByteBuf to Netty's pool.
 
 There is no additional allocation of ByteBuf other than the one netty allocate from it's pool.
+
+#### Autorest runtime Response::content
 
 Today the [content()](https://github.com/Azure/autorest-clientruntime-for-java/blob/996c7b706875293858e91a1f1a14330334bc88b9/client-runtime/src/main/java/com/microsoft/rest/v3/http/NettyClient.java#L120) getter property in our `Runtime Response` type returns `Flux<java.nio.buffer.ByteBuffer>`.
 
@@ -87,11 +87,13 @@ Today the [content()](https://github.com/Azure/autorest-clientruntime-for-java/b
 
 TODO: We may end up having `content()` returns `ByteBufFlux`/`Flux<io.netty.buffer.ByteBuf>`.
  
-#### Request content
+#### Reactor-netty Request::content
 
 In the core, netty requires the type of content to write to the wire is of `io.netty.buffer.ByteBuf`.
 
 Reactor-netty expose `send(..)` APIs that takes `Flux<io.netty.buffer.ByteBuf>` or `ByteBufFlux`.
+
+#### Autorest runtime Request::content
 
 Today the `content()` property in our `runtime Request` type is of type `Fluex<java.nio.buffer.ByteBuffer>`.
 
