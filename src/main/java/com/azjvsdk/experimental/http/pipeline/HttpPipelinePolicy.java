@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
  * Request policy.
  */
 @FunctionalInterface
-public interface RequestPolicy {
+public interface HttpPipelinePolicy {
     /**
      * Process provided request context and invokes the next policy.
      *
@@ -15,5 +15,5 @@ public interface RequestPolicy {
      * @param next the next policy to invoke
      * @return publisher that initiate the request upon subscription and emits response on completion.
      */
-    Mono<HttpResponse> process(PipelineCallContext context, NextPolicy next);
+    Mono<HttpResponse> process(HttpPipelineCallContext context, NextPolicy next);
 }

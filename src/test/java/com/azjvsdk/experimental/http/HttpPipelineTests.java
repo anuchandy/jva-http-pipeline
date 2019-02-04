@@ -1,8 +1,8 @@
 package com.azjvsdk.experimental.http;
 
 import com.azjvsdk.experimental.http.pipeline.HttpPipeline;
-import com.azjvsdk.experimental.http.pipeline.PipelineCallContext;
-import com.azjvsdk.experimental.http.pipeline.RequestPolicy;
+import com.azjvsdk.experimental.http.pipeline.HttpPipelineCallContext;
+import com.azjvsdk.experimental.http.pipeline.HttpPipelinePolicy;
 import org.junit.Assert;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
@@ -14,12 +14,13 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HttpPipelineTests
 {
     @Test
     public void pipelineWithZeroPolicies() {
-        RequestPolicy[] policies = new RequestPolicy[0];
+        HttpPipelinePolicy[] policies = new HttpPipelinePolicy[0];
         // Create http client
         HttpClient httpClient = createHttpClient();
         // Create pipeline with the two global policies
@@ -27,13 +28,19 @@ public class HttpPipelineTests
         // Create http request
         HttpRequest httpRequest = createHttpRequest();
         // Create a context for the http request
-        PipelineCallContext cxt = pipeline.newContext(httpRequest);
+        HttpPipelineCallContext cxt = pipeline.newContext(httpRequest);
         // Store a data in context
         cxt.setData("foo", new ArrayList<String>());
         //
         Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt);
         responseMono.block();
-        List<String> l = (ArrayList<String>) cxt.getData("foo");
+
+        Optional<Object> r = cxt.getData("foo");
+        if (!r.isPresent()) {
+            throw new IllegalStateException("Item with key 'foo' not found.");
+        }
+        List<String> l = (ArrayList<String>)r.get();
+
         Assert.assertNotNull(l);
         Assert.assertEquals(1, l.size());
         Assert.assertEquals("httpClient", l.get(0));
@@ -41,11 +48,14 @@ public class HttpPipelineTests
 
     @Test
     public void pipelineWithOnePolicy() {
-        RequestPolicy[] policies = new RequestPolicy[1];
+        HttpPipelinePolicy[] policies = new HttpPipelinePolicy[1];
         // First policy
         policies[0] = (context, next) -> {
-            List<String> l = (ArrayList<String>) context.getData("foo");
-            l.add("policyA");
+            Optional<Object> r = context.getData("foo");
+            if (!r.isPresent()) {
+                throw new IllegalStateException("Item with key 'foo' not found.");
+            }
+            ((ArrayList<String>)r.get()).add("policyA");
             return next.process();
         };
         // Create http client
@@ -55,13 +65,17 @@ public class HttpPipelineTests
         // Create http request
         HttpRequest httpRequest = createHttpRequest();
         // Create a context for the http request
-        PipelineCallContext cxt = pipeline.newContext(httpRequest);
+        HttpPipelineCallContext cxt = pipeline.newContext(httpRequest);
         // Store a data in context
         cxt.setData("foo", new ArrayList<String>());
         //
         Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt);
         responseMono.block();
-        List<String> l = (ArrayList<String>) cxt.getData("foo");
+        Optional<Object> r = cxt.getData("foo");
+        if (!r.isPresent()) {
+            throw new IllegalStateException("Item with key 'foo' not found.");
+        }
+        List<String> l = (ArrayList<String>)r.get();
         Assert.assertNotNull(l);
         Assert.assertEquals(2, l.size());
         Assert.assertEquals("policyA", l.get(0));
@@ -71,17 +85,23 @@ public class HttpPipelineTests
 
     @Test
     public void pipelineWithManyPolicies() {
-        RequestPolicy[] policies = new RequestPolicy[2];
+        HttpPipelinePolicy[] policies = new HttpPipelinePolicy[2];
         // First policy
         policies[0] = (context, next) -> {
-            List<String> l = (ArrayList<String>) context.getData("foo");
-            l.add("policyA");
+            Optional<Object> r = context.getData("foo");
+            if (!r.isPresent()) {
+                throw new IllegalStateException("Item with key 'foo' not found.");
+            }
+            ((ArrayList<String>)r.get()).add("policyA");
             return next.process();
         };
         // Second policy
         policies[1] = (context, next) -> {
-            List<String> l = (ArrayList<String>) context.getData("foo");
-            l.add("policyB");
+            Optional<Object> r = context.getData("foo");
+            if (!r.isPresent()) {
+                throw new IllegalStateException("Item with key 'foo' not found.");
+            }
+            ((ArrayList<String>)r.get()).add("policyB");
             return next.process();
         };
         // Create http client
@@ -91,13 +111,17 @@ public class HttpPipelineTests
         // Create http request
         HttpRequest httpRequest = createHttpRequest();
         // Create a context for the http request
-        PipelineCallContext cxt = pipeline.newContext(httpRequest);
+        HttpPipelineCallContext cxt = pipeline.newContext(httpRequest);
         // Store a data in context
         cxt.setData("foo", new ArrayList<String>());
         //
         Mono<HttpResponse> responseMono = pipeline.sendRequest(cxt);
         responseMono.block();
-        List<String> l = (ArrayList<String>) cxt.getData("foo");
+        Optional<Object> r = cxt.getData("foo");
+        if (!r.isPresent()) {
+            throw new IllegalStateException("Item with key 'foo' not found.");
+        }
+        List<String> l = (ArrayList<String>)r.get();
         Assert.assertNotNull(l);
         Assert.assertEquals(3, l.size());
         Assert.assertEquals("policyA", l.get(0));
@@ -109,11 +133,15 @@ public class HttpPipelineTests
     private HttpClient createHttpClient() {
         return new HttpClient() {
             @Override
-            public Mono<HttpResponse> sendRequestAsync(PipelineCallContext context) {
+            public Mono<HttpResponse> sendRequestAsync(HttpPipelineCallContext context) {
                 return Mono.defer(() -> {
                     HttpRequest request = context.httpRequest();
                     //
-                    List<String> l = (ArrayList<String>) context.getData("foo");
+                    Optional<Object> r = context.getData("foo");
+                    if (!r.isPresent()) {
+                        throw new IllegalStateException("Item with key 'foo' not found.");
+                    }
+                    List<String> l = (ArrayList<String>)r.get();
                     l.add("httpClient");
                     //
                     HttpResponse response = new HttpResponse() {
