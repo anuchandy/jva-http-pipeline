@@ -11,6 +11,7 @@ import java.util.Optional;
 public final class HttpPipelineCallContext {
     private final HttpRequest httpRequest;
     private ContextData data;
+    private boolean requestContentReplyable;
 
     //<editor-fold defaultstate="collapsed" desc="Package internal methods">
     /**
@@ -72,6 +73,26 @@ public final class HttpPipelineCallContext {
      */
     public HttpRequest httpRequest() {
         return this.httpRequest;
+    }
+
+    /**
+     * Indicate that the {@link HttpRequest} associated with this context has a replay-able
+     * content stream.
+     *
+     * @param isReplayable true if the request content is replay-able, false otherwise.
+     *
+     * @return reference to this context.
+     */
+    public HttpPipelineCallContext setRequestContentReplayable(boolean isReplayable) {
+        this.requestContentReplyable = isReplayable;
+        return this;
+    }
+
+    /**
+     * @return true if the request content is replay-able, false otherwise.
+     */
+    public boolean isRequestContentReplyable() {
+        return this.requestContentReplyable;
     }
 
     //</editor-fold>

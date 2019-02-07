@@ -7,14 +7,12 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class HttpRequest {
-    private String callerMethod;
     private HttpMethod httpMethod;
     private URL url;
     private HttpHeaders headers;
     private Flux<ByteBuffer> body;
 
-    public HttpRequest(String callerMethod, HttpMethod httpMethod, URL url) {
-        this.callerMethod = callerMethod;
+    public HttpRequest(HttpMethod httpMethod, URL url) {
         this.httpMethod = httpMethod;
         this.url = url;
         this.headers = new HttpHeaders();

@@ -66,4 +66,9 @@ public class HttpHeaders implements Iterable<HttpHeader> {
     public Iterator<HttpHeader> iterator() {
         return headers.values().iterator();
     }
+
+    @Override
+    public HttpHeaders clone() {
+        return new HttpHeaders(this.toMap());
+    }
 }
