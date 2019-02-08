@@ -81,6 +81,7 @@ public final class HttpPipeline {
      * @return a publisher upon subscription flows the context through policies, sends the request and emits response upon completion.
      */
     public Mono<HttpResponse> sendRequest(HttpPipelineCallContext context) {
+        // TODO: Mono.defer to make complete lazy
         NextPolicy next = new NextPolicy(this, context);
         return next.process();
     }
